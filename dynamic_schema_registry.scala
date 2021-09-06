@@ -52,8 +52,8 @@ conf.setMaster("local[*]")
 val spark = SparkSession.builder.appName("Avro format with schema registry").config(conf).getOrCreate()
 
 // config port and ip
-val kafkaNodesString = "172.30.5.5:9092"
-val schemaRegistryAddress = "http://172.30.5.5:8081"
+val kafkaNodesString = "xxx.xx.xx.xx:9092"
+val schemaRegistryAddress = "http://xxx.xx.xx.xx::8081"
 val schemaRegistryClient = new CachedSchemaRegistryClient(schemaRegistryAddress, 1000)
 
 //create avro aschema with created df
@@ -62,18 +62,6 @@ val keySchema = AvroSchemaUtils.toAvroSchema(dfAccount, "Id") // df.Id = avro ke
 
 schemaRegistryClient.register("t-value", avroSchema)
 schemaRegistryClient.register("t-key", keySchema)
-
-//val input15 = spark
-//  .readStream
-//  .format("kafka")
-//  .option("kafka.bootstrap.servers", kafkaNodesString)
-//  .option("subscribe", "input15")
-//  .load()
-
-//val streamDF = input15.select(from_avro($"key", "t-key", schemaRegistryAddress), 
-//                              from_avro($"value", "t-value", schemaRegistryAddress))
-
-//display(streamDF)
 
 // el value se envia con formato struct
 val allColumns = struct(dfAccount.columns.head, dfAccount.columns.tail: _*)
